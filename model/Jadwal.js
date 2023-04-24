@@ -35,8 +35,8 @@ const Jadwal = mongoose.model('jadwal', {
           default: hari,
      },
      peserta: {
-          type: Object,
-          default: {},
+          type: Array,
+          default: [],
      },
 
      kelas: {

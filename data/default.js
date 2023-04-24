@@ -1,10 +1,7 @@
 const hari = {
      Senin: {
           visible: true,
-          kegiatan: [
-               { start: '07:00', end: '07:30', title: 'Mengerjakan Nasi gemuk', theme: 'blue' },
-               { start: '07:00', end: '07:30', title: 'Mengerjakan tempe', theme: 'red' },
-          ],
+          kegiatan: [],
      },
      Selasa: {
           visible: true,

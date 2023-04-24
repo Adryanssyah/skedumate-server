@@ -1,6 +1,8 @@
 // controllers/register.js
 const bcrypt = require('bcryptjs');
 const User = require('../model/User');
+const Jadwal = require('../model/Jadwal');
+const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 require('../utils/db');
 
@@ -36,6 +38,7 @@ const Login = async (req, res) => {
                                    namaDepan: (req.session.namaDepan = user.namaDepan),
                                    namaBelakang: (req.session.namaBelakang = user.namaBelakang),
                                    tema: (req.session.tema = user.tema),
+                                   jadwal: (req.session.jadwal = user.jadwal),
                               },
                          });
                     } else {
@@ -68,6 +71,7 @@ const checkSession = (req, res) => {
                namaDepan: req.session.namaDepan,
                namaBelakang: req.session.namaBelakang,
                tema: req.session.tema,
+               jadwal: req.session.jadwal,
           };
           res.send(user);
      } else {
@@ -82,9 +86,77 @@ const Logout = (req, res) => {
      });
 };
 
+const ambilNama = async (req, res) => {
+     try {
+          const user = await User.findOne({ _id: req.body._id });
+          res.status(200).send(user.namaDepan + ' ' + user.namaBelakang);
+     } catch (err) {
+          console.error(err);
+          res.status(500).send({ message: 'Terjadi kesalahan ' });
+     }
+};
+
+const checkAnggota = async (req, res) => {
+     const custom_id = req.body.custom_id;
+     const _id = req.body._id;
+     try {
+          const jadwal = await Jadwal.findOne({ custom_id });
+
+          if (jadwal.pemilik.equals(_id)) {
+               res.status(200).send({ permision: true, role: 'owner', jenis: jadwal.jenis });
+               return;
+          } else if (!jadwal.pemilik.equals(_id) && jadwal.jenis === 'private') {
+               res.status(200).send({ permision: false, jenis: jadwal.jenis });
+               return;
+          }
+
+          const peserta = jadwal.peserta.find((item) => item.userId.equals(_id));
+
+          if (peserta) {
+               const { role } = peserta;
+               res.status(200).send({ permision: true, role, jenis: jadwal.jenis });
+          } else {
+               res.status(200).send({ permision: false, jenis: jadwal.jenis });
+          }
+     } catch (error) {
+          console.error(error);
+          res.status(500).send('Server Error');
+     }
+};
+
+const getAnggota = async (req, res) => {
+     try {
+          const data = req.body;
+          const users = await User.find({ _id: { $in: data.map((d) => d.userId) } }, 'namaDepan namaBelakang _id tema');
+          const newData = data.map((d) => {
+               const user = users.find((u) => u._id.toString() === d.userId);
+               return {
+                    ...d,
+                    tema: user.tema,
+                    namaDepan: user.namaDepan,
+                    namaBelakang: user.namaBelakang,
+                    initials: user.namaDepan.match(/(\b\S)?/g).join('') + user.namaBelakang.match(/(\b\S)?/g).join(''),
+               };
+          });
+
+          res.status(200).json(newData);
+     } catch (error) {
+          res.status(500).json({ message: error.message });
+     }
+};
+
+const getUser = async (req, res) => {
+     const user = await User.findOne({ _id: req.body._id });
+     res.status(200).send(user);
+};
+
 module.exports = {
      Register,
      Login,
      Logout,
      checkSession,
+     ambilNama,
+     checkAnggota,
+     getAnggota,
+     getUser,
 };
