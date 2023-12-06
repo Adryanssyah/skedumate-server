@@ -34,11 +34,17 @@ app.use(
      })
 );
 
-if (process.env.ENV === 'production') {
+if (process.env.PRODUCTION) {
      app.set('trust proxy', 1);
      sess.cookie.secure = true;
 }
 
 app.use(router);
+
+// const port = process.env.PORT || 4000;
+
+// app.listen(port, () => {
+//      console.log(`listening on ${port}`);
+// });
 
 module.exports = app;
