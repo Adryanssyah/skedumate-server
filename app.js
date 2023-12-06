@@ -12,7 +12,7 @@ const app = express();
 app.use(cookieParser());
 app.use(
      cors({
-          origin: process.env.CLIENT,
+          origin: '*',
           credentials: true,
      })
 );
@@ -41,18 +41,10 @@ app.use(
 
 app.use(router);
 
+// const port = process.env.PORT || 4000;
+
+// app.listen(port, () => {
+//      console.log(`listening on ${port}`);
+// });
+
 module.exports = app;
-
-// const app = require('express')();
-// const { v4 } = require('uuid');
-
-// app.get('/checkSession', (req, res) => {
-//      res.send(false);
-// });
-
-// app.get('/api/item/:slug', (req, res) => {
-//      const { slug } = req.params;
-//      res.end(`Item: ${slug}`);
-// });
-
-// module.exports = app;
