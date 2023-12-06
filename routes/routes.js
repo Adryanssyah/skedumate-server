@@ -27,5 +27,6 @@ router.post('/tambah-kegiatan', validateTambahKegiatan, JadwalController.addKegi
 router.post('/edit-kegiatan', validateTambahKegiatan, JadwalController.editKegiatan);
 router.post('/hapus-kegiatan', JadwalController.hapusKegiatan);
 router.post('/gabung', JadwalController.gabung);
+router.post('/ubah-role', JadwalController.ubahRole);
 
 module.exports = router;

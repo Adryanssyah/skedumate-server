@@ -103,7 +103,7 @@ const checkAnggota = async (req, res) => {
           const jadwal = await Jadwal.findOne({ custom_id });
 
           if (jadwal.pemilik.equals(_id)) {
-               res.status(200).send({ permision: true, role: 'owner', jenis: jadwal.jenis });
+               res.status(200).send({ permision: true, role: 'Pemilik', jenis: jadwal.jenis });
                return;
           } else if (!jadwal.pemilik.equals(_id) && jadwal.jenis === 'private') {
                res.status(200).send({ permision: false, jenis: jadwal.jenis });

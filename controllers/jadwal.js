@@ -89,7 +89,6 @@ const getJadwalByPemilikId = async (req, res) => {
           });
 
           res.status(200).json(modifiedJadwals);
-          console.log(modifiedJadwals);
      } catch (error) {
           res.status(500).json({ message: error.message });
      }
@@ -273,10 +272,29 @@ const gabung = async (req, res) => {
      if (jadwal.password === req.body.password) {
           await updateJadwalUser(mongoose.Types.ObjectId(req.body._id), mongoose.Types.ObjectId(req.body.userId));
           await tambahAnggota(mongoose.Types.ObjectId(req.body._id), mongoose.Types.ObjectId(req.body.userId));
+          res.status(200).send({ permision: true, role: 'Anggota' });
      } else {
           response.error = true;
           response.msg = 'Password tidak cocok!';
           res.send(response);
+     }
+};
+
+const ubahRole = async (req, res) => {
+     try {
+          const { _id, userId } = req.body;
+          const jadwal = await Jadwal.findOne({ _id });
+          const index = jadwal.peserta.findIndex((peserta) => peserta.userId.toString() === userId);
+          if (index !== -1) {
+               jadwal.peserta[index].role = jadwal.peserta[index].role === 'Anggota' ? 'Editor' : 'Anggota';
+               await Jadwal.findOneAndUpdate({ _id: req.body._id }, { peserta: jadwal.peserta });
+               res.status(200).send('Role peserta berhasil diupdate');
+          } else {
+               res.status(404).send('Peserta tidak ditemukan');
+          }
+     } catch (error) {
+          console.error(error);
+          res.status(500).send('Terjadi kesalahan pada server');
      }
 };
 
@@ -291,4 +309,5 @@ module.exports = {
      editKegiatan,
      hapusKegiatan,
      gabung,
+     ubahRole,
 };
