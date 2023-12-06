@@ -34,7 +34,7 @@ app.use(
      })
 );
 
-if (process.env.PRODUCTION) {
+if (app.get('env') === 'production') {
      app.set('trust proxy', 1);
      sess.cookie.secure = true;
 }
