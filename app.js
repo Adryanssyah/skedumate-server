@@ -46,7 +46,7 @@
 const app = require('express')();
 const { v4 } = require('uuid');
 
-app.get('/', (req, res) => {
+app.get('/checkSession', (req, res) => {
      res.send(false);
 });
 
