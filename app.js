@@ -19,6 +19,10 @@ app.use(
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+if (app.get('env') === 'production') {
+     app.set('trust proxy', 1);
+}
 app.use(
      session({
           secret: 'rahasia',
@@ -28,16 +32,11 @@ app.use(
           cookie: {
                expires: new Date(Date.now() + 30 * 86400 * 1000),
                maxAge: 30 * 86400 * 1000,
+               secure: true,
                sameSite: false,
-               httpOnly: false,
           },
      })
 );
-
-// if (app.get('env') === 'production') {
-//      app.set('trust proxy', 1);
-//      sess.cookie.secure = true;
-// }
 
 app.use(router);
 
