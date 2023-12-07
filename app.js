@@ -23,7 +23,7 @@ app.use(
      session({
           secret: 'rahasia',
           resave: false,
-          saveUninitialized: false,
+          saveUninitialized: true,
           store: MongoStore.create({ mongoUrl: process.env.MONGO_URL, collectionName: 'sessions' }),
           cookie: {
                expires: new Date(Date.now() + 30 * 86400 * 1000),
