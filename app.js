@@ -22,7 +22,6 @@ app.use(bodyParser.json());
 
 if (app.get('env') === 'production') {
      app.set('trust proxy', 1);
-     console.log('lololololo');
 }
 
 app.use(
@@ -42,10 +41,12 @@ app.use(
 
 app.use(router);
 
-// const port = process.env.PORT || 4000;
+if (app.get('env') === 'production') {
+     module.exports = app;
+} else {
+     const port = process.env.PORT || 4000;
 
-// app.listen(port, () => {
-//      console.log(`listening on ${port}`);
-// });
-
-module.exports = app;
+     app.listen(port, () => {
+          console.log(`listening on ${port}`);
+     });
+}
