@@ -7,7 +7,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
-let secured = false;
+let secured = true;
 const app = express();
 app.use(cookieParser());
 app.use(
