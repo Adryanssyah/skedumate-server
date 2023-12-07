@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 
 if (app.get('env') === 'production') {
      app.set('trust proxy', 1);
+     console.log('lololololo');
 }
 
 app.use(
