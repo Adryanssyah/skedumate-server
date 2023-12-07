@@ -7,7 +7,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
-
+let secured = false;
 const app = express();
 app.use(cookieParser());
 app.use(
@@ -22,7 +22,9 @@ app.use(bodyParser.json());
 
 if (app.get('env') === 'production') {
      app.set('trust proxy', 1);
+     secured = true;
 }
+
 app.use(
      session({
           secret: 'rahasia',
@@ -32,8 +34,8 @@ app.use(
           cookie: {
                expires: new Date(Date.now() + 30 * 86400 * 1000),
                maxAge: 30 * 86400 * 1000,
-               secure: true,
-               sameSite: false,
+               secure: secured,
+               sameSite: true,
           },
      })
 );
